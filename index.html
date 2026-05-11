@@ -1,1 +1,238 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>語源で増やす英単語 Shark Coach 第4分冊</title>
+<style>
+:root{--blue:#0f6fae;--sky:#e8f7ff;--deep:#083b66;--card:#ffffff;--line:#cfe9f7;--accent:#27b7e8;--mint:#dff8ef;--sand:#fff8ea}
+*{box-sizing:border-box} body{margin:0;font-family:"Hiragino Sans","Noto Sans JP",Arial,sans-serif;background:linear-gradient(180deg,#eaf8ff,#f8fcff);color:#17324d}
+header{background:linear-gradient(135deg,var(--blue),#39bde8);color:#fff;padding:20px} header h1{margin:0;font-size:1.5rem} header p{margin:6px 0 0;font-size:.92rem}
+.container{max-width:1240px;margin:auto;padding:16px}.nav,.subnav,.toolbar{display:flex;gap:8px;flex-wrap:wrap;margin:14px 0}
+button{border:0;border-radius:999px;padding:10px 14px;background:#dff4ff;color:#084c78;font-weight:700;cursor:pointer} button.active,button:hover{background:var(--blue);color:#fff}
+.grid{display:grid;grid-template-columns:290px 1fr;gap:16px}.card{background:var(--card);border:1px solid var(--line);border-radius:20px;padding:18px;box-shadow:0 8px 20px rgba(13,87,130,.08)}
+.roots button{display:block;width:100%;margin:6px 0;text-align:left;border-radius:14px}.shark{display:flex;gap:12px;align-items:center;background:#fff;border:2px solid #bdeeff;border-radius:22px;padding:14px;margin-bottom:14px}.shark .face{font-size:2.8rem;animation:bob 2s infinite}
+@keyframes bob{50%{transform:translateY(-4px)}} .word-list{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:10px}.word{border:1px solid var(--line);border-radius:16px;padding:12px;background:#fbfeff}
+.badge{display:inline-block;background:#e5f7ff;color:#0b6fa6;border-radius:999px;padding:3px 8px;font-size:.75rem;font-weight:700}.coremap{text-align:center;border:2px dashed #a9dff5;border-radius:20px;padding:16px;background:#f5fcff;margin:12px 0}
+.center{font-size:1.45rem;font-weight:800;color:var(--blue)}.flow{font-size:.92rem;line-height:1.85}.illus-wrap{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:12px;margin:14px 0}
+.illus{border-radius:18px;border:1px solid var(--line);background:linear-gradient(180deg,#ffffff,#f2fbff);padding:14px;min-height:190px;display:flex;flex-direction:column;justify-content:center;align-items:center;text-align:center}.illus .big{font-size:3.3rem;line-height:1.1}.illus .label{font-weight:800;color:var(--blue);margin-top:8px}
+.flash{min-height:280px;display:flex;align-items:center;justify-content:center;text-align:center;cursor:pointer;transition:transform .2s ease}.flash:hover{transform:translateY(-2px)}.flash .front{font-size:2.45rem;font-weight:900;color:var(--deep)}.flash .back{text-align:left;line-height:1.85;max-width:760px}
+.options{display:grid;gap:10px;margin-top:14px}.option{border-radius:14px;background:#eef9ff;text-align:left}.correct{background:#d8ffe8!important;color:#075d2c!important}.wrong{background:#ffe1e1!important;color:#821818!important}
+.stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:10px}.stat{background:#f2fbff;border-radius:16px;padding:14px;text-align:center}.stat b{font-size:1.6rem;color:var(--blue)}
+.small{font-size:.85rem;color:#49677e}.note{background:var(--sand);border:1px solid #f4dfb4;border-radius:16px;padding:12px}.quizbox{background:#f7fcff;border:1px solid var(--line);border-radius:18px;padding:16px}.confetti{animation:pop .4s}@keyframes pop{50%{transform:scale(1.03)}}
+input[type="text"]{border:1px solid var(--line);border-radius:999px;padding:10px 14px;min-width:220px}.progressbar{height:12px;background:#eaf6fc;border-radius:999px;overflow:hidden}.progressbar span{display:block;height:100%;background:linear-gradient(90deg,#27b7e8,#0f6fae)}
+@media(max-width:760px){.grid{grid-template-columns:1fr}header h1{font-size:1.2rem}.flash .front{font-size:1.8rem}}
+</style>
+</head>
+<body>
+<header>
+<h1>🦈 語源で増やす英単語 Shark Coach 第4分冊</h1>
+<p>No.71〜90 完成版｜語源 → コアイメージ → 派生語 → 例文 → 推測問題で覚える学習アプリ</p>
+</header>
+<div class="container">
+<div class="shark"><div class="face">🦈</div><div><b id="coachTitle">サメ先生</b><div id="coachMsg">第4分冊は pan, poly, mono, hetero などの抽象接頭辞が中心。対比で覚えると強いよ！</div></div></div>
+<div class="nav">
+<button onclick="setMode('map', this)" class="active">語源マップ</button>
+<button onclick="setMode('flash', this)">フラッシュカード</button>
+<button onclick="setMode('quiz', this)">復習テスト</button>
+<button onclick="setMode('review', this)">復習管理</button>
+<button onclick="setMode('progress', this)">進捗</button>
+</div>
+<div class="grid">
+<aside class="card roots">
+<h3>語源リスト</h3>
+<div class="toolbar"><input id="rootSearch" type="text" placeholder="語根・単語を検索" oninput="renderRootButtons()"></div>
+<div id="rootButtons"></div>
+</aside>
+<main class="card" id="app"></main>
+</div>
+</div>
+<script>
+const roots=[
+{no:71,root:'pan',core:'すべて',icon:'🌍',grasp:'pan はギリシャ語 pan（すべて）に由来する。全体、全面的、あらゆるものに及ぶ方向へ広がる。',words:[
+{word:'pandemic',level:'B2',meaning:'パンデミック；世界的流行の',example:'The pandemic changed education worldwide.',ja:'パンデミックは世界中で教育を変えた。',memo:'pan-「すべて」＋ demos 系で「すべての人々に広がる」。'},
+{word:'panorama',level:'B2',meaning:'パノラマ、全景',example:'We enjoyed the panorama from the hill.',ja:'私たちは丘からの全景を楽しんだ。',memo:'pan-「すべて」＋ -orama「眺め」で「見渡せる全景」。'},
+{word:'pantheism',level:'C1+',meaning:'汎神論',example:'The poem has a pantheistic tone.',ja:'その詩には汎神論的な調子がある。',memo:'pan-「すべて」＋ theism。'},
+{word:'panacea',level:'発展',meaning:'万能薬',example:'There is no panacea for social inequality.',ja:'社会的不平等に万能薬はない。',memo:'「あらゆる病を治すもの」が原義。'},
+{word:'pan-American',level:'発展',meaning:'全米州の',example:'The summit was pan-American in scope.',ja:'その会議は全米州的な広がりをもっていた。',memo:'pan-「全体の」＋ American。'},
+{word:'panopticon',level:'発展',meaning:'一望監視施設',example:'The concept of the panopticon influenced modern thought.',ja:'パノプティコンの概念は近代思想に影響した。',memo:'pan-「すべて」＋ opticon「見るもの」。'}]},
+{no:72,root:'poly',core:'多い',icon:'🔷',grasp:'poly はギリシャ語 polys（多い）に由来する。多数、多様、多面的な方向へ広がる。',words:[
+{word:'polygon',level:'B2',meaning:'多角形',example:'A triangle is a polygon.',ja:'三角形は多角形の一種である。',memo:'poly-「多い」＋ gon「角」。'},
+{word:'polyglot',level:'C1+',meaning:'多言語を話す人；多言語の',example:'She is a remarkable polyglot.',ja:'彼女はすばらしい多言語話者だ。',memo:'poly-「多い」＋ glot「舌・言語」。'},
+{word:'polytheism',level:'C1+',meaning:'多神教',example:'Ancient cultures often practiced polytheism.',ja:'古代文化では多神教がしばしば見られた。',memo:'poly-「多い」＋ theism。'},
+{word:'polymorphism',level:'C1+',meaning:'多形性',example:'The species shows polymorphism.',ja:'その種は多形性を示す。',memo:'poly-「多い」＋ morph「形」。'},
+{word:'polyphony',level:'発展',meaning:'多声音楽',example:'The choir sang in polyphony.',ja:'その合唱団は多声音楽で歌った。',memo:'poly-「多い」＋ phony「音」。'},
+{word:'polymer',level:'発展',meaning:'高分子',example:'Plastic is made of polymers.',ja:'プラスチックは高分子からできている。',memo:'poly-「多い」＋ meros「部分」。'},
+{word:'polysyllabic',level:'発展',meaning:'多音節の',example:'The term is highly polysyllabic.',ja:'その語は非常に多音節だ。',memo:'poly-「多い」＋ syllabic「音節の」。'}]},
+{no:73,root:'mono',core:'一つ',icon:'1️⃣',grasp:'mono はギリシャ語 monos（一つ、単独の）に由来する。一つだけ、単一の、独占的な方向へ広がる。',words:[
+{word:'monologue',level:'B2',meaning:'独白',example:'The actor delivered a long monologue.',ja:'その俳優は長い独白を語った。',memo:'mono-「一つ」＋ -logue「語り」。'},
+{word:'monotone',level:'B2',meaning:'単調な口調；単調な',example:'He spoke in a monotone voice.',ja:'彼は単調な声で話した。',memo:'mono-「一つ」＋ tone。'},
+{word:'monopoly',level:'B2',meaning:'独占',example:'The firm has a monopoly on the market.',ja:'その企業は市場を独占している。',memo:'mono-「一つ」＋ polein「売る」。'},
+{word:'monorail',level:'B2',meaning:'モノレール',example:'We took the monorail to the airport.',ja:'私たちは空港までモノレールに乗った。',memo:'mono-「一本の」＋ rail。'},
+{word:'monolithic',level:'C1+',meaning:'一枚岩の、単一巨大な',example:'The party is not monolithic.',ja:'その政党は一枚岩ではない。',memo:'mono-「一つ」＋ lithos「石」。'},
+{word:'monogamy',level:'発展',meaning:'一夫一妻制',example:'The species is monogamous.',ja:'その種は一夫一妻制である。',memo:'mono-「一つ」＋ gamos「婚姻」。'},
+{word:'monotheism',level:'発展',meaning:'一神教',example:'Islam is a monotheistic religion.',ja:'イスラム教は一神教である。',memo:'mono-「一つ」＋ theism。'}]},
+{no:74,root:'hetero',core:'異なる',icon:'↔️',grasp:'hetero はギリシャ語 heteros（異なる、別の）に由来する。異質、異系、別種の方向へ広がる。',words:[
+{word:'heterogeneous',level:'C1+',meaning:'異質な、多様な',example:'The class is socially heterogeneous.',ja:'そのクラスは社会的に多様である。',memo:'hetero-「異なる」＋ geneous「種類」。'},
+{word:'heterosexual',level:'C1+',meaning:'異性愛の；異性愛者',example:'The term heterosexual describes attraction to the opposite sex.',ja:'heterosexual は異性への魅力を表す語である。',memo:'hetero-「異なる」＋ sexual。'},
+{word:'heterodox',level:'C1+',meaning:'異端の、非正統的な',example:'He is known for his heterodox views.',ja:'彼は異端的な見解で知られている。',memo:'hetero-「異なる」＋ dox「意見」。'},
+{word:'heteronym',level:'発展',meaning:'ヘテロニム',example:'Lead is a heteronym in English.',ja:'lead は英語でヘテロニムである。',memo:'hetero-「異なる」＋ nym「名前」。'},
+{word:'heterotroph',level:'発展',meaning:'従属栄養生物',example:'Animals are heterotrophs.',ja:'動物は従属栄養生物である。',memo:'hetero-「他の」＋ troph「栄養」。'},
+{word:'heteroglossia',level:'発展',meaning:'多声性、異言語混在',example:'The novel shows heteroglossia.',ja:'その小説は多声性を示している。',memo:'hetero-「異なる」＋ glossa「言語」。'}]},
+{no:75,root:'homo / homeo',core:'同じ・似ている',icon:'🟰',grasp:'homo / homeo は homos（同じ）と homoios（似ている）に関係する語群。英語では形が近いが、語源的には区別すると理解しやすい。',words:[
+{word:'homophone',level:'B2',meaning:'同音異義語',example:'Sea and see are homophones.',ja:'sea と see は同音異義語である。',memo:'homo-「同じ」＋ phone「音」。'},
+{word:'homogeneous',level:'B2',meaning:'同質の、均質の',example:'The group is not homogeneous.',ja:'その集団は均質ではない。',memo:'homo-「同じ」＋ geneous「種類」。'},
+{word:'homeostasis',level:'B2',meaning:'恒常性',example:'The body maintains homeostasis.',ja:'体は恒常性を保つ。',memo:'homeo-「似た・同様の」＋ stasis「状態」。'},
+{word:'homologous',level:'C1+',meaning:'相同の',example:'These structures are homologous.',ja:'これらの構造は相同である。',memo:'対応関係が同じ、が原義。'},
+{word:'homonym',level:'発展',meaning:'同音異義語・同綴異義語',example:'Bat has several homonyms.',ja:'bat には複数の同音異義語がある。',memo:'homo-「同じ」＋ nym「名前」。'},
+{word:'homeopathic',level:'発展',meaning:'ホメオパシーの',example:'Homeopathic treatment remains controversial.',ja:'ホメオパシー治療は今も議論がある。',memo:'homeo-「似ている」＋ pathy。'},
+{word:'homogeneous mixture',level:'発展',meaning:'均一混合物',example:'Salt water is a homogeneous mixture.',ja:'食塩水は均一混合物である。',memo:'homogeneous を化学で用いた表現。'}]},
+{no:76,root:'hyper',core:'超えて・過剰に',icon:'📈',grasp:'hyper はギリシャ語 hyper（〜を超えて、過剰に）に由来する。過度の、超〜、過剰状態へ広がる。',words:[
+{word:'hyperactive',level:'B2',meaning:'活動過剰な',example:'The child seemed unusually hyperactive.',ja:'その子は異常に活動過剰に見えた。',memo:'hyper-「過剰に」＋ active。'},
+{word:'hypertension',level:'B2',meaning:'高血圧',example:'Exercise can reduce hypertension.',ja:'運動は高血圧を改善しうる。',memo:'hyper-「高すぎる」＋ tension「圧」。'},
+{word:'hypercritical',level:'B2',meaning:'批判的すぎる',example:'He is often hypercritical of others.',ja:'彼はしばしば他人に批判的すぎる。',memo:'hyper-「過度に」＋ critical。'},
+{word:'hyperinflation',level:'C1+',meaning:'ハイパーインフレ',example:'The country once experienced hyperinflation.',ja:'その国はかつてハイパーインフレを経験した。',memo:'hyper-「過度の」＋ inflation。'},
+{word:'hyperbole',level:'発展',meaning:'誇張',example:'The statement was pure hyperbole.',ja:'その発言はまったくの誇張だった。',memo:'hyper-「超えて」＋ bole「投げる」。'},
+{word:'hyperlink',level:'発展',meaning:'ハイパーリンク',example:'Click the hyperlink below.',ja:'下のハイパーリンクをクリックしなさい。',memo:'文書間を飛び越えるリンク。'},
+{word:'hyperthermia',level:'発展',meaning:'高体温',example:'Severe heat may cause hyperthermia.',ja:'激しい暑さは高体温を引き起こすことがある。',memo:'hyper-「高すぎる」＋ thermia。'}]},
+{no:77,root:'hypo',core:'下に・不足して',icon:'📉',grasp:'hypo はギリシャ語 hypo（下に、不足して）に由来する。低い、足りない、下位の、皮膚の下の方向へ広がる。',words:[
+{word:'hypothesis',level:'B2',meaning:'仮説',example:'The scientist proposed a new hypothesis.',ja:'その科学者は新しい仮説を提案した。',memo:'hypo-「下に」＋ thesis「置かれた命題」。'},
+{word:'hypothermia',level:'B2',meaning:'低体温症',example:'The climber showed signs of hypothermia.',ja:'その登山者は低体温症の兆候を示した。',memo:'hypo-「下に」＋ thermia「熱状態」。'},
+{word:'hypodermic',level:'B2',meaning:'皮下注射の',example:'The nurse prepared a hypodermic needle.',ja:'看護師は皮下注射針を準備した。',memo:'hypo-「下に」＋ dermic「皮膚の」。'},
+{word:'hypoglycemia',level:'発展',meaning:'低血糖',example:'The patient was treated for hypoglycemia.',ja:'その患者は低血糖の治療を受けた。',memo:'hypo-「不足して」＋ glyc「糖」＋ -emia。'},
+{word:'hypotension',level:'発展',meaning:'低血圧',example:'She sometimes suffers from hypotension.',ja:'彼女はときどき低血圧に悩まされる。',memo:'hypo-「低く」＋ tension「圧」。'},
+{word:'hypocenter',level:'発展',meaning:'震源',example:'The hypocenter was deep underground.',ja:'震源は地下深くにあった。',memo:'hypo-「下に」＋ center。'}]},
+{no:78,root:'proto',core:'最初の・原始の',icon:'🥚',grasp:'proto はギリシャ語 protos（最初の、第一の）に由来する。初期の、原型の、先駆的な方向へ広がる。',words:[
+{word:'protagonist',level:'B2',meaning:'主人公、主役',example:'The protagonist faces a difficult choice.',ja:'主人公は難しい選択に直面する。',memo:'proto-「先頭の」＋ agonist「争う者」。'},
+{word:'prototype',level:'B2',meaning:'原型、試作品',example:'The company built a prototype first.',ja:'その会社はまず試作品を作った。',memo:'proto-「最初の」＋ type「型」。'},
+{word:'proton',level:'B2',meaning:'陽子',example:'A proton has a positive charge.',ja:'陽子は正の電荷をもつ。',memo:'基本粒子名として「第一のもの」の感覚。'},
+{word:'protozoa',level:'B2',meaning:'原生動物',example:'Some protozoa cause disease.',ja:'原生動物の中には病気を引き起こすものもある。',memo:'proto-「最初の」＋ zoa「動物」。'},
+{word:'prototypical',level:'C1+',meaning:'典型的な、原型的な',example:'This is a prototypical example.',ja:'これは典型例である。',memo:'prototype の形容詞形。'},
+{word:'protolanguage',level:'発展',meaning:'祖語',example:'Scholars reconstruct a protolanguage.',ja:'学者たちは祖語を再建する。',memo:'proto-「最初の」＋ language。'},
+{word:'protostar',level:'発展',meaning:'原始星',example:'Astronomers observed a protostar.',ja:'天文学者たちは原始星を観測した。',memo:'proto-「形成初期の」＋ star。'}]},
+{no:79,root:'neo',core:'新しい',icon:'✨',grasp:'neo はギリシャ語 neos（新しい）に由来する。新しい型、復興、新様式へ広がる。',words:[
+{word:'neonatal',level:'C1+',meaning:'新生児の',example:'The hospital has a neonatal unit.',ja:'その病院には新生児病棟がある。',memo:'neo-「新しい」＋ natal「出生の」。'},
+{word:'neoclassical',level:'C1+',meaning:'新古典主義の',example:'The building is neoclassical in style.',ja:'その建物は新古典主義様式である。',memo:'neo-「新しい」＋ classical。'},
+{word:'neoliberal',level:'C1+',meaning:'新自由主義の；新自由主義者',example:'The policy is often described as neoliberal.',ja:'その政策はしばしば新自由主義的だとされる。',memo:'neo-「新しい」＋ liberal。'},
+{word:'neolithic',level:'発展',meaning:'新石器時代の',example:'Farming spread in the Neolithic age.',ja:'農耕は新石器時代に広がった。',memo:'neo-「新しい」＋ lithic「石の」。'},
+{word:'neoplasm',level:'発展',meaning:'新生物、腫瘍',example:'The scan revealed a neoplasm.',ja:'その検査では腫瘍が見つかった。',memo:'neo-「新しい」＋ plasm「形成物」。'},
+{word:'neologism',level:'発展',meaning:'新語',example:'The dictionary added several neologisms.',ja:'その辞書は複数の新語を追加した。',memo:'neo-「新しい」＋ logos 系で「新しく作られた語」。'}]},
+{no:80,root:'meta',core:'超えて・変化して',icon:'🪞',grasp:'meta はギリシャ語 meta（〜の後に、〜を超えて、変化して）に由来する。高次の自己言及、変化、上位視点へ広がる。',words:[
+{word:'metaphor',level:'B2',meaning:'比喩',example:'The writer uses a strong metaphor.',ja:'その作家は強い比喩を用いる。',memo:'meta-「越えて」＋ phor「運ぶ」。'},
+{word:'metabolism',level:'B2',meaning:'代謝',example:'Exercise increases metabolism.',ja:'運動は代謝を高める。',memo:'meta-「変化して」＋ bole 系。'},
+{word:'metadata',level:'C1+',meaning:'メタデータ',example:'The file contains useful metadata.',ja:'そのファイルには有用なメタデータが含まれている。',memo:'meta-「一段上の」＋ data。'},
+{word:'metacognition',level:'発展',meaning:'メタ認知',example:'Teachers try to foster metacognition.',ja:'教師はメタ認知を育てようとする。',memo:'meta-「〜についての」＋ cognition。'},
+{word:'metamorphosis',level:'発展',meaning:'変身、変態',example:'The story centers on metamorphosis.',ja:'その物語は変身を中心にしている。',memo:'meta-「変化して」＋ morph「形」。'},
+{word:'metaphysical',level:'発展',meaning:'形而上学の、超自然的な',example:'The poem raises metaphysical questions.',ja:'その詩は形而上学的な問いを投げかける。',memo:'meta-「超えて」＋ physical。'}]},
+{no:81,root:'para',core:'本流のそばに',icon:'↕️',grasp:'para はギリシャ語 para（横に、そばに、並んで、反して）に由来する。並行するもの、補助的なもの、通常から外れたものへ広がる。',words:[
+{word:'parallel',level:'B1',meaning:'平行の；類似',example:'The two lines are parallel.',ja:'その二本の線は平行である。',memo:'互いに並んで進む、が原義。'},
+{word:'paragraph',level:'B1',meaning:'段落',example:'Write one paragraph about the topic.',ja:'その話題について一つの段落を書きなさい。',memo:'もとは「そばに書かれた線」から。'},
+{word:'paradox',level:'B2',meaning:'逆説',example:'It sounds like a paradox.',ja:'それは逆説のように聞こえる。',memo:'para-「反して」＋ dox「意見」。'},
+{word:'paranormal',level:'B2',meaning:'超常の',example:'The film deals with paranormal events.',ja:'その映画は超常現象を扱う。',memo:'para-「通常の外に」＋ normal。'},
+{word:'paradigm',level:'C1+',meaning:'理論枠組み、模範',example:'The discovery changed the paradigm.',ja:'その発見は理論枠組みを変えた。',memo:'「そばに示された手本」が原義。'},
+{word:'paramedic',level:'発展',meaning:'救急救命士',example:'A paramedic arrived quickly.',ja:'救急救命士がすぐに到着した。',memo:'para-「補助の」＋ medic。'},
+{word:'parasite',level:'発展',meaning:'寄生生物',example:'The disease is caused by a parasite.',ja:'その病気は寄生生物によって引き起こされる。',memo:'もとは「他人の食卓のそばで食べる者」。'},
+{word:'paramilitary',level:'発展',meaning:'準軍事的な',example:'The group was described as paramilitary.',ja:'その集団は準軍事的だと述べられた。',memo:'para-「準ずる」＋ military。'}]},
+{no:82,root:'dia',core:'通して・横切って',icon:'🔍',grasp:'dia はギリシャ語 dia（〜を通して、横切って）に由来する。対話、直径、診断などへ広がる。',words:[
+{word:'dialogue',level:'B1',meaning:'対話',example:'The class encourages dialogue.',ja:'その授業は対話を促す。',memo:'dia-「通して」＋ -logue「ことば」。'},
+{word:'diameter',level:'B2',meaning:'直径',example:'The circle has a diameter of two meters.',ja:'その円の直径は2メートルだ。',memo:'dia-「横切って」＋ meter「測る」。'},
+{word:'diagnosis',level:'B2',meaning:'診断',example:'The doctor made a diagnosis.',ja:'医師は診断を下した。',memo:'dia-「通して」＋ gnosis「知る」。'},
+{word:'dialectic',level:'C1+',meaning:'弁証法；弁証法的な',example:'The essay uses a dialectic approach.',ja:'その論文は弁証法的な方法を使っている。',memo:'「対話を通じて考える」が原義。'},
+{word:'diagonal',level:'発展',meaning:'対角線の；対角線',example:'Draw a diagonal line.',ja:'対角線を引きなさい。',memo:'dia-「横切って」＋ gonia「角」。'},
+{word:'diaspora',level:'発展',meaning:'離散、ディアスポラ',example:'The book studies the Jewish diaspora.',ja:'その本はユダヤ人ディアスポラを研究している。',memo:'dia-「あちこちに」＋ spora「種まき」。'},
+{word:'diathermy',level:'発展',meaning:'透熱療法',example:'The clinic offers diathermy.',ja:'そのクリニックは透熱療法を提供している。',memo:'dia-「通して」＋ thermy「熱」。'}]},
+{no:83,root:'peri',core:'周り・取り囲む',icon:'⭕',grasp:'peri はギリシャ語 peri（周りに、取り囲んで）に由来する。周囲、外周、周辺のものへ広がる。',words:[
+{word:'perimeter',level:'C1+',meaning:'周囲、周長',example:'The fence marks the perimeter.',ja:'その柵が周囲を示している。',memo:'peri-「周り」＋ meter「測る」。'},
+{word:'peripheral',level:'C1+',meaning:'周辺の、末梢の',example:'The issue is not peripheral.',ja:'その問題は周辺的ではない。',memo:'中心の周囲にある、が原義。'},
+{word:'periscope',level:'C1+',meaning:'潜望鏡',example:'The submarine used a periscope.',ja:'その潜水艦は潜望鏡を使った。',memo:'peri-「周り」＋ scope「見る道具」。'},
+{word:'perinatal',level:'C1+',meaning:'周産期の',example:'The hospital has a perinatal unit.',ja:'その病院には周産期病棟がある。',memo:'peri-「周辺の」＋ natal「出生」。'},
+{word:'pericardium',level:'発展',meaning:'心膜',example:'The infection affected the pericardium.',ja:'その感染症は心膜に影響した。',memo:'peri-「周り」＋ cardium「心臓」。'},
+{word:'periodontal',level:'発展',meaning:'歯周の',example:'She received periodontal treatment.',ja:'彼女は歯周治療を受けた。',memo:'peri-「周り」＋ odont「歯」。'},
+{word:'periphery',level:'発展',meaning:'周辺部',example:'Innovation often starts at the periphery.',ja:'革新はしばしば周辺部で始まる。',memo:'周辺部、外縁を表す。'}]},
+{no:84,root:'endo',core:'内側',icon:'🏠',grasp:'endo はギリシャ語 endon（内側に）に由来する。内部、内分泌、内在的なものへ広がる。',words:[
+{word:'endoscope',level:'C1+',meaning:'内視鏡',example:'The doctor used an endoscope.',ja:'医師は内視鏡を使った。',memo:'endo-「内側」＋ scope「見る道具」。'},
+{word:'endocrine',level:'C1+',meaning:'内分泌の；内分泌系',example:'The endocrine system regulates hormones.',ja:'内分泌系はホルモンを調整する。',memo:'endo-「内側へ」＋ crine「分泌する」。'},
+{word:'endogenous',level:'C1+',meaning:'内因性の',example:'The disease may have endogenous causes.',ja:'その病気には内因的原因があるかもしれない。',memo:'endo-「内側」＋ genous「生じる」。'},
+{word:'endothermic',level:'発展',meaning:'吸熱性の',example:'The reaction is endothermic.',ja:'その反応は吸熱性である。',memo:'endo-「内へ」＋ thermic「熱の」。'},
+{word:'endometriosis',level:'発展',meaning:'子宮内膜症',example:'She was diagnosed with endometriosis.',ja:'彼女は子宮内膜症と診断された。',memo:'endo-「内側」＋ metrium 系。'},
+{word:'endoderm',level:'発展',meaning:'内胚葉',example:'The endoderm forms internal organs.',ja:'内胚葉は内臓器官を形成する。',memo:'endo-「内側」＋ derm「層」。'}]},
+{no:85,root:'exo',core:'外側',icon:'🌠',grasp:'exo はギリシャ語 exo（外に、外側に）に由来する。外部、外へ出ること、外骨格、外因性へ広がる。',words:[
+{word:'exoskeleton',level:'B2',meaning:'外骨格',example:'Crabs have an exoskeleton.',ja:'カニは外骨格をもつ。',memo:'exo-「外側」＋ skeleton。'},
+{word:'exoplanet',level:'B2',meaning:'系外惑星',example:'Astronomers discovered a new exoplanet.',ja:'天文学者たちは新しい系外惑星を発見した。',memo:'exo-「外の」＋ planet。'},
+{word:'exothermic',level:'C1+',meaning:'発熱性の',example:'The reaction is exothermic.',ja:'その反応は発熱性である。',memo:'exo-「外へ」＋ thermic「熱の」。'},
+{word:'exogenous',level:'発展',meaning:'外因性の',example:'The change was triggered by exogenous factors.',ja:'その変化は外因的要因によって引き起こされた。',memo:'exo-「外側」＋ genous「生じる」。'},
+{word:'exosphere',level:'発展',meaning:'外気圏',example:'The satellite moved through the exosphere.',ja:'その衛星は外気圏を通過した。',memo:'exo-「外」＋ sphere「圏」。'},
+{word:'exorcise',level:'発展',meaning:'悪霊を追い払う',example:'The priest tried to exorcise the spirit.',ja:'司祭はその霊を追い払おうとした。',memo:'現代的には「外へ追い払う」イメージで理解しやすい参照語。'}]},
+{no:86,root:'iso',core:'同じ・等しい',icon:'⚖️',grasp:'iso はギリシャ語 isos（同じ、等しい）に由来する。等しい、同質の、同位体、等圧線などへ広がる。',words:[
+{word:'isometric',level:'C1+',meaning:'等角・等測の',example:'The drawing is isometric.',ja:'その図は等角図である。',memo:'iso-「等しい」＋ metric「測る」。'},
+{word:'isotope',level:'C1+',meaning:'同位体',example:'Carbon has several isotopes.',ja:'炭素にはいくつかの同位体がある。',memo:'iso-「同じ」＋ topos「場所」。'},
+{word:'isomorphic',level:'C1+',meaning:'同型の',example:'The two structures are isomorphic.',ja:'その二つの構造は同型である。',memo:'iso-「同じ」＋ morph「形」。'},
+{word:'isobar',level:'発展',meaning:'等圧線',example:'The map shows isobars clearly.',ja:'その地図は等圧線を明確に示している。',memo:'iso-「等しい」＋ bar「圧力」。'},
+{word:'isosceles',level:'発展',meaning:'二等辺の',example:'This is an isosceles triangle.',ja:'これは二等辺三角形である。',memo:'iso-「等しい」＋ skelos「脚」。'},
+{word:'isothermal',level:'発展',meaning:'等温の',example:'The process is isothermal.',ja:'その過程は等温である。',memo:'iso-「等しい」＋ thermal。'}]},
+{no:87,root:'ortho',core:'まっすぐ・正しい',icon:'📏',grasp:'ortho はギリシャ語 orthos（まっすぐな、正しい）に由来する。正しい形、矯正、直交、正統へ広がる。',words:[
+{word:'orthodox',level:'C1+',meaning:'正統的な、伝統的な',example:'He holds an orthodox view.',ja:'彼は正統的な見解をもっている。',memo:'ortho-「正しい」＋ dox「意見」。'},
+{word:'orthography',level:'C1+',meaning:'正書法',example:'English orthography is complex.',ja:'英語の正書法は複雑だ。',memo:'ortho-「正しい」＋ graphy「書くこと」。'},
+{word:'orthodontics',level:'C1+',meaning:'歯科矯正学',example:'She is training in orthodontics.',ja:'彼女は歯科矯正学を学んでいる。',memo:'ortho-「正しく」＋ dont「歯」。'},
+{word:'orthogonal',level:'発展',meaning:'直交する',example:'The two vectors are orthogonal.',ja:'その二つのベクトルは直交している。',memo:'ortho-「まっすぐ」＋ gonal「角」。'},
+{word:'orthopedic',level:'発展',meaning:'整形外科の',example:'He visited an orthopedic clinic.',ja:'彼は整形外科を受診した。',memo:'もとは子どもの骨格矯正に関係。'},
+{word:'orthopnea',level:'発展',meaning:'起坐呼吸',example:'The patient experienced orthopnea.',ja:'その患者は起坐呼吸を経験した。',memo:'ortho-「まっすぐ」＋ pnea「呼吸」。'}]},
+{no:88,root:'anti',core:'反対・対抗',icon:'🛡️',grasp:'anti はギリシャ語 anti（反対に、対抗して）に由来する。反対、対抗、抗体、抗生物質などへ広がる。',words:[
+{word:'antiwar',level:'B2',meaning:'反戦の',example:'They joined an antiwar movement.',ja:'彼らは反戦運動に参加した。',memo:'anti-「反対して」＋ war。'},
+{word:'antisocial',level:'B2',meaning:'反社会的な、非社交的な',example:'The behavior was described as antisocial.',ja:'その行動は反社会的だとされた。',memo:'anti-「反対して」＋ social。'},
+{word:'antibiotic',level:'B2',meaning:'抗生物質',example:'The doctor prescribed an antibiotic.',ja:'医師は抗生物質を処方した。',memo:'anti-「対抗して」＋ biotic。'},
+{word:'antibody',level:'B2',meaning:'抗体',example:'The vaccine helps the body produce antibodies.',ja:'そのワクチンは体が抗体を作る助けになる。',memo:'anti-「対抗して」＋ body。'},
+{word:'antithesis',level:'C1+',meaning:'対照、正反対',example:'The poem is built on antithesis.',ja:'その詩は対照表現で成り立っている。',memo:'anti-「反対」＋ thesis。'},
+{word:'antagonist',level:'発展',meaning:'敵対者、拮抗薬',example:'The antagonist opposes the hero.',ja:'その敵対者は主人公に対抗する。',memo:'anti-「対抗して」＋ agon「争い」。'},
+{word:'antifreeze',level:'発展',meaning:'不凍液',example:'The car needs antifreeze in winter.',ja:'その車は冬に不凍液が必要だ。',memo:'anti-「防いで」＋ freeze。'},
+{word:'antimatter',level:'発展',meaning:'反物質',example:'Scientists study antimatter carefully.',ja:'科学者たちは反物質を注意深く研究している。',memo:'anti-「反対の」＋ matter。'}]},
+{no:89,root:'syn / sym',core:'一緒に・共に',icon:'🤝',grasp:'syn / sym はギリシャ語 syn（共に、一緒に）に由来する。同時、総合、共感、対称などへ広がる。',words:[
+{word:'sympathy',level:'B2',meaning:'同情、共感',example:'I felt sympathy for her.',ja:'私は彼女に同情した。',memo:'sym-「共に」＋ pathy「感じる」。'},
+{word:'symphony',level:'B2',meaning:'交響曲',example:'We listened to a symphony.',ja:'私たちは交響曲を聴いた。',memo:'sym-「共に」＋ phony「音」。'},
+{word:'synthesis',level:'B2',meaning:'総合、合成',example:'The essay needs better synthesis.',ja:'その小論文にはよりよい総合が必要だ。',memo:'syn-「共に」＋ thesis「置く」。'},
+{word:'symmetry',level:'B2',meaning:'対称、対称性',example:'The building has perfect symmetry.',ja:'その建物は完全な対称性をもつ。',memo:'sym-「共に」＋ metry「測る」。'},
+{word:'synonym',level:'C1+',meaning:'同義語',example:'Big is a synonym for large.',ja:'big は large の同義語である。',memo:'syn-「同じく」＋ onym「名前」。'},
+{word:'synchronize',level:'発展',meaning:'同期させる',example:'Please synchronize the files.',ja:'ファイルを同期してください。',memo:'syn-「共に」＋ chron「時間」。'},
+{word:'symbiosis',level:'発展',meaning:'共生',example:'The two species live in symbiosis.',ja:'その二種は共生している。',memo:'sym-「共に」＋ biosis「生きること」。'},
+{word:'synergy',level:'発展',meaning:'相乗効果',example:'The merger created synergy.',ja:'その合併は相乗効果を生んだ。',memo:'syn-「共に」＋ ergon「働く」。'}]},
+{no:90,root:'ana',core:'いったん動かして',icon:'🧩',grasp:'ana はギリシャ語 ana（上へ、再び、ばらばらに）に由来する。分析、再建、類比、解剖へ広がる。',words:[
+{word:'analysis',level:'B2',meaning:'分析',example:'The report includes careful analysis.',ja:'その報告書には綿密な分析が含まれている。',memo:'ana-「ばらして」＋ lysis「ほどく」。'},
+{word:'analyze',level:'B2',meaning:'分析する',example:'We need to analyze the data.',ja:'私たちはそのデータを分析する必要がある。',memo:'analysis の動詞形。'},
+{word:'analogy',level:'B2',meaning:'類推、類比',example:'The teacher used an analogy.',ja:'その教師は類推を用いた。',memo:'対応関係にもとづく推論。'},
+{word:'anatomy',level:'B2',meaning:'解剖学、構造',example:'She studies anatomy.',ja:'彼女は解剖学を学んでいる。',memo:'ana-「ばらして」＋ tomy「切る」。'},
+{word:'anachronism',level:'C1+',meaning:'時代錯誤',example:'The novel contains an anachronism.',ja:'その小説には時代錯誤が含まれている。',memo:'ana-「逆に」＋ chron「時間」。'},
+{word:'anabolism',level:'発展',meaning:'同化作用',example:'Exercise can stimulate anabolism.',ja:'運動は同化作用を刺激しうる。',memo:'ana-「作り上げて」＋ bole 系。'},
+{word:'anagram',level:'発展',meaning:'アナグラム',example:'They solved the anagram quickly.',ja:'彼らはすぐにアナグラムを解いた。',memo:'ana-「再び」＋ gram「書かれたもの」。'},
+{word:'anastrophe',level:'発展',meaning:'倒置',example:'The line uses anastrophe for effect.',ja:'その一節は効果のために倒置を用いている。',memo:'ana-「逆に」＋ strophe「回す」。'}]}
+];
+let mode='map',current=0,flashIndex=0,flashFront=true,quiz=null,quizType='rootMeaning';
+let state=JSON.parse(localStorage.getItem('sharkEtymologyState90')||'{"points":0,"correct":0,"total":0,"review":{},"learnedRoots":[],"learnedWords":[],"lastDate":"","streak":0,"today":0}');
+function save(){localStorage.setItem('sharkEtymologyState90',JSON.stringify(state))}
+function allWords(){return roots.flatMap(r=>r.words.map(w=>({...w,root:r.root,no:r.no,core:r.core,icon:r.icon})))}
+function coach(msg){document.getElementById('coachMsg').textContent=msg}
+function markToday(){const today=new Date().toDateString();if(state.lastDate!==today){const y=new Date(Date.now()-86400000).toDateString();state.streak=state.lastDate===y?state.streak+1:1;state.today=0;state.lastDate=today;save();}} markToday();
+function esc(s){return String(s).replace(/[&<>\"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]))}
+function rootFilter(){const q=(document.getElementById('rootSearch')?.value||'').trim().toLowerCase();if(!q)return roots;return roots.filter(r=>r.root.toLowerCase().includes(q)||r.core.toLowerCase().includes(q)||r.words.some(w=>w.word.toLowerCase().includes(q)||w.meaning.includes(q)))}
+function renderRootButtons(){const filtered=rootFilter();document.getElementById('rootButtons').innerHTML=filtered.map(r=>{const i=roots.findIndex(x=>x.no===r.no);return `<button onclick="current=${i};render()" class="${i===current?'active':''}">No.${r.no} ${r.root}<br><span class="small">${r.core}</span></button>`}).join('')+`<div class="note" style="margin-top:12px"><b>収録範囲</b><br>No.71〜90 を実装済み。検索にも対応しています。</div>`}
+function setMode(m,el){mode=m;document.querySelectorAll('.nav button').forEach(b=>b.classList.remove('active'));if(el)el.classList.add('active');render()}
+function render(){renderRootButtons();if(mode==='map')renderMap();if(mode==='flash')renderFlash();if(mode==='quiz')renderQuiz();if(mode==='review')renderReview();if(mode==='progress')renderProgress()}
+function renderMap(){const r=roots[current];state.learnedRoots=[...new Set([...state.learnedRoots,r.no])];save();const reps=r.words.slice(0,8).map(w=>`<span class="badge">${esc(w.word)}</span>`).join(' ');const cards=r.words.map(w=>`<div class="word"><b>${esc(w.word)}</b> <span class="badge">${esc(w.level)}</span><div style="margin-top:6px">意味：${esc(w.meaning)}</div><div class="small" style="margin-top:6px">語源で理解：${esc(w.memo)}</div></div>`).join('');document.getElementById('app').innerHTML=`<h2>No.${r.no} ${esc(r.root)}</h2><p><span class="badge">Core Image</span> ${esc(r.core)}</p><div class="illus-wrap"><div class="illus"><div class="big">${r.icon}</div><div class="label">${esc(r.core)}</div><div class="small">対比で覚えると強い語根です。</div></div><div class="coremap"><div class="center">${esc(r.root)}</div><div>🧠 ${esc(r.core)}</div><div class="flow">代表語：${reps}<br><br>「語根 → コアイメージ → 派生語」の順で見ると、抽象接頭辞の働きが見えやすくなります。</div></div></div><h3>この語源のつかみ方</h3><p>${esc(r.grasp)}</p><h3>収録語</h3><div class="word-list">${cards}</div>`;coach(`No.${r.no} は「${r.core}」が核。反意・対比の接頭辞と並べて覚えよう！`)}
+function renderFlash(){const words=allWords();const w=words[flashIndex%words.length];const inner=flashFront?`<div><div class="front">${esc(w.word)}</div><p>${esc(w.root)} / ${esc(w.level)}</p><p class="small">クリックで裏面へ</p></div>`:`<div class="back"><b>${esc(w.word)}</b> <span class="badge">${esc(w.level)}</span><br>意味：${esc(w.meaning)}<br>例文：${esc(w.example)}<br>和訳：${esc(w.ja)}<br>語源で理解：${esc(w.memo)}<br><span class="small">もう一度クリックで表面へ</span></div>`;document.getElementById('app').innerHTML=`<h2>フラッシュカード</h2><div class="flash card" onclick="flipFlash()">${inner}</div><div class="subnav"><button onclick="speakWord()">🔊 単語</button><button onclick="speakExample()">🔊 例文</button><button onclick="prevFlash()">前へ</button><button onclick="nextFlash()">次へ</button></div><div class="note">クリックするたびに表裏が切り替わります。第4分冊は対比語根が多いので、反対語根も一緒に思い出すと効果的です。</div>`;state.learnedWords=[...new Set([...state.learnedWords,w.word])];save();coach('pan / poly / mono / hetero など、セットで思い出せると推測力が一気に上がるよ。')}
+function flipFlash(){flashFront=!flashFront;renderFlash()} function nextFlash(){flashIndex=(flashIndex+1)%allWords().length;flashFront=true;renderFlash()} function prevFlash(){flashIndex=(flashIndex-1+allWords().length)%allWords().length;flashFront=true;renderFlash()}
+function speak(text){if(!('speechSynthesis' in window)){alert('このブラウザは音声読み上げに未対応です。');return}const u=new SpeechSynthesisUtterance(text);u.lang='en-US';u.rate=.9;speechSynthesis.cancel();speechSynthesis.speak(u)}
+function currentFlashWord(){return allWords()[flashIndex%allWords().length]} function speakWord(){speak(currentFlashWord().word)} function speakExample(){speak(currentFlashWord().example)}
+function randomChoice(arr){return arr[Math.floor(Math.random()*arr.length)]} function shuffle(arr){return [...arr].sort(()=>Math.random()-0.5)} function pickWords(n,excludeWord){return allWords().filter(w=>w.word!==excludeWord).sort(()=>Math.random()-0.5).slice(0,n)}
+function wordForms(word){const base=word.split(' ')[0];const forms=new Set([base,base.toLowerCase(),base+'s',base+'es',base+'ed',base+'ing']);if(base.endsWith('y')){forms.add(base.slice(0,-1)+'ies');forms.add(base.slice(0,-1)+'ied')}if(base.endsWith('e')){forms.add(base.slice(0,-1)+'ing');forms.add(base+'d')}return [...forms]}
+function makeBlankSentence(example,word){let out=example;for(const f of wordForms(word)){const rx=new RegExp('\\b'+f.replace(/[.*+?^${}()|[\]\\]/g,'\\$&')+'\\b','i');if(rx.test(out))return out.replace(rx,'(      )')}return example+' 〔正しい語を選ぶ〕'}
+function setQuizType(type){quizType=type;renderQuiz()}
+function makeQuiz(){if(quizType==='rootMeaning'){const r=randomChoice(roots);const opts=shuffle([r.core,...roots.filter(x=>x.root!==r.root).sort(()=>Math.random()-0.5).slice(0,3).map(x=>x.core)]);quiz={q:`語源 ${r.root} のコアイメージとして最も近いものは？`,ans:r.core,hint:r.grasp,opts,tag:r.root};return}if(quizType==='wordMeaning'){const w=randomChoice(allWords());const opts=shuffle([w.meaning,...pickWords(3,w.word).map(x=>x.meaning)]);quiz={q:`${w.word} の意味は？`,ans:w.meaning,hint:w.memo,opts,tag:w.word};return}if(quizType==='sentence'){const w=randomChoice(allWords().filter(x=>x.example&&x.example.length>8));const sentence=makeBlankSentence(w.example,w.word);const opts=shuffle([w.word,...pickWords(3,w.word).map(x=>x.word)]);quiz={q:sentence,ans:w.word,hint:w.memo,opts,tag:w.word}}}
+function renderQuiz(){makeQuiz();document.getElementById('app').innerHTML=`<h2>復習テスト</h2><div class="subnav"><button onclick="setQuizType('rootMeaning')" class="${quizType==='rootMeaning'?'active':''}">語源の意味4択</button><button onclick="setQuizType('wordMeaning')" class="${quizType==='wordMeaning'?'active':''}">単語の意味4択</button><button onclick="setQuizType('sentence')" class="${quizType==='sentence'?'active':''}">英文空所4択</button></div><div class="quizbox"><p><span class="badge">復習範囲</span> No.71〜90</p><p>${esc(quiz.q)}</p><div class="options">${quiz.opts.map(o=>`<button class="option" onclick="answerQuiz(this,'${String(o).replace(/'/g,"\\'")}')">${esc(o)}</button>`).join('')}</div><p class="small">今日の目標：10問 / あと ${Math.max(0,10-state.today)} 問</p></div>`;coach('語根の対比がこの分冊のキモ。mono と poly、hyper と hypo、endo と exo を意識しよう。')}
+function answerQuiz(btn,choice){state.total++;state.today++;if(choice===quiz.ans){state.correct++;state.points+=10;btn.classList.add('correct');coach('正解！対比まで思い出せたら完璧。+10ポイント！');document.getElementById('app').classList.add('confetti')}else{btn.classList.add('wrong');state.points+=2;coach(`惜しい！ヒント：${quiz.hint}`)}state.review[quiz.tag]=Math.max(0,(state.review[quiz.tag]||0)+(choice===quiz.ans?-1:2));save();setTimeout(()=>{document.getElementById('app').classList.remove('confetti');renderQuiz()},1200)}
+function renderReview(){const words=allWords().sort((a,b)=>(state.review[b.word]||0)-(state.review[a.word]||0));const w=words[0];document.getElementById('app').innerHTML=`<h2>復習管理</h2><p class="small">忘れた単語ほど上に出やすくしています。localStorage に簡易保存しています。</p><div class="word"><h3>${esc(w.word)} <span class="badge">${esc(w.level)}</span></h3><p>意味：${esc(w.meaning)}</p><p>例文：${esc(w.example)}</p><p>和訳：${esc(w.ja)}</p><p>語源で理解：${esc(w.memo)}</p></div><div class="subnav"><button onclick="rate('${String(w.word).replace(/'/g,"\\'")}',-1)">覚えた</button><button onclick="rate('${String(w.word).replace(/'/g,"\\'")}',1)">あいまい</button><button onclick="rate('${String(w.word).replace(/'/g,"\\'")}',3)">忘れた</button></div>`;coach('苦手語は対になる接頭辞までセットで覚え直そう。')}
+function rate(word,delta){state.review[word]=Math.max(0,(state.review[word]||0)+delta);state.points+=delta<0?6:2;save();renderReview()}
+function renderProgress(){const weak=Object.entries(state.review).sort((a,b)=>b[1]-a[1]).slice(0,8);const rate=state.total?Math.round(state.correct/state.total*100):0;const wordCount=allWords().length;let title=state.points>1200?'抽象接頭辞マスター':state.points>700?'対比語根ハンター':state.points>300?'接頭辞チャレンジャー':'たまごシャーク';const rootPct=Math.round((state.learnedRoots.length/roots.length)*100);const wordPct=Math.round((state.learnedWords.length/wordCount)*100);document.getElementById('app').innerHTML=`<h2>進捗確認</h2><div class="stats"><div class="stat"><b>${state.learnedRoots.length}</b><br>学習済み語源</div><div class="stat"><b>${state.learnedWords.length}</b><br>確認済み単語</div><div class="stat"><b>${rate}%</b><br>正答率</div><div class="stat"><b>${state.streak}</b><br>連続学習日数</div><div class="stat"><b>${state.points}</b><br>学習ポイント</div></div><h3>語源進捗</h3><div class="progressbar"><span style="width:${rootPct}%"></span></div><p class="small">${state.learnedRoots.length} / ${roots.length} 語源</p><h3>単語進捗</h3><div class="progressbar"><span style="width:${wordPct}%"></span></div><p class="small">${state.learnedWords.length} / ${wordCount} 語</p><h3>サメの称号：${title}</h3><h3>達成バッジ</h3><p>${state.points>=100?'🏅 100pt達成 ':''}${state.today>=10?'🎯 今日の目標達成 ':''}${state.streak>=3?'🔥 3日連続 ':''}${state.learnedRoots.length>=10?'📚 10語源達成 ':''}${state.learnedRoots.length>=20?'🧭 第4分冊コンプリート ':''}</p><h3>苦手項目</h3><p>${weak.length?weak.map(x=>`${x[0]}（${x[1]}）`).join(' / '):'まだありません'}</p><div class="note" style="margin-top:12px">この完成版は No.71〜90 を搭載しています。抽象接頭辞を対比で整理しながら、評論・理科・社会系の語彙へ広げられます。</div>`;coach('第4分冊は接頭辞の体系化が勝負。対になる語根を往復しよう！')}
+render();
+</script>
+</body>
+</html>
 
